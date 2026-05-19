@@ -8,7 +8,7 @@ Este proyecto muestra los Pokémon de las generaciones 1, 2 y 3, permitiendo fil
 
 ## 🚀 Demo
 
-👉 https://ELAzorin.github.io/pokedex-web-v6/
+👉 https://elazorin.github.io/pokedex-web-V6/
 
 ---
 
