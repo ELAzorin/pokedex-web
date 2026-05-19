@@ -207,12 +207,17 @@ h1 {
 
 @media (max-width: 768px) {
   .leyenda {
-    display: flex;
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 6 por fila = 3 filas */
     gap: 8px;
+    padding: 10px;
+  }
 
-    padding: 10px 15px;
+  .tipo-box {
+    font-size: 12px;
+    padding: 6px;
+    text-align: center;
+    border-radius: 15px;
   }
 }
 @media (max-width: 768px) {
@@ -232,12 +237,5 @@ h1 {
 
   .pokemon p {
     font-size: 12px;
-  }
-}
-@media (max-width: 768px) {
-  .leyenda {
-    display: flex;
-    overflow-x: auto;
-    flex-wrap: nowrap;
   }
 }
