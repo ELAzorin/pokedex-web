@@ -4,24 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokédex - Primera Generación</title>
-
   <link rel="stylesheet" href="styles.css">
 </head>
-
-
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="cerrar" onclick="cerrarModal()">&times;</span>
-
-    <img id="modal-img">
-    <h2 id="modal-nombre"></h2>
-    <p id="modal-numero"></p>
-    <p id="modal-tipo"></p>
-    <p id="modal-desc"></p>
-  </div>
-</div>
-
 <body>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="cerrar" onclick="cerrarModal()">&times;</span>
+      <img id="modal-img" alt="Imagen del Pokémon">
+      <h2 id="modal-nombre"></h2>
+      <p id="modal-numero"></p>
+      <p id="modal-tipo"></p>
+      <p id="modal-desc"></p>
+    </div>
+  </div>
 
   <!-- HEADER -->
   <header>
@@ -38,15 +35,15 @@
   </header>
 
   <div class="buscador-container">
-    <input 
-      type="text" 
-      id="buscador" 
-      placeholder="Buscar por nombre o número..."
-    >
+    <input type="text" id="buscador" placeholder="Buscar por nombre o número...">
   </div>
-  <p id="contador">Mostrando 0 Pokémon</p>
+
+  <div class="contador-container">
+    <p id="contador">Mostrando 0 Pokémon</p>
+    <button class="tipo-box reset boton-todos activo" data-tipo="todos">Mostrar todos</button>
+  </div>
+
   <div class="leyenda">
-    <button class="tipo-box reset" data-tipo="todos">Todos</button>
     <button class="tipo-box" data-tipo="Fuego">Fuego</button>
     <button class="tipo-box" data-tipo="Agua">Agua</button>
     <button class="tipo-box" data-tipo="Planta">Planta</button>
@@ -83,7 +80,8 @@
     const pokedex = document.getElementById("pokedex");
     const buscador = document.getElementById("buscador");
     const contador = document.getElementById("contador");
-
+    let generacionActual = 1;
+    let animandoGeneracion = false;
 
     const generaciones = {
 
@@ -176,7 +174,6 @@
         ]
       }
     };
-
     const infoPokemon = {
       //INICIO PRIMERA GENERACIÓN
       "001": { tipo: "Planta / Veneno", descripcion: "Un bulbo crece en su espalda desde pequeño." },
@@ -573,7 +570,6 @@
       "386": { tipo: "Psíquico", descripcion: "Modifica su forma." }
       //FIN TERCERA GENERACIÓN
     };
-
     const coloresTipo = {
       "Fuego": "#f8b4a0",
       "Agua": "#a0c4ff",
@@ -596,58 +592,89 @@
     };
 
     function cargarGeneracion(gen, event) {
-      pokedex.innerHTML = "";
-      document.querySelector('[data-tipo="todos"]').classList.add("activo");
-      const datos = generaciones[gen];
+      if (animandoGeneracion) return;
+      animandoGeneracion = true;
+      generacionActual = gen;
 
-      datos.nombres.forEach((nombre, index) => {
-        const numero = (index + datos.inicio).toString().padStart(3, "0");
-        const card = document.createElement("article");
-        card.className = "pokemon";
-        card.dataset.numero = numero;
+      pokedex.classList.remove("pokedex-entrada");
+      pokedex.classList.add("pokedex-salida");
 
-        const info = infoPokemon[numero];
+      setTimeout(() => {
+        pokedex.innerHTML = "";
 
-        if (info) {
-          const tipos = info.tipo.split(" / ");
+        document.querySelectorAll(".tipo-box").forEach(b => b.classList.remove("activo"));
+        document.querySelector('[data-tipo="todos"]').classList.add("activo");
 
-          if (tipos.length === 2) {
-            const color1 = coloresTipo[tipos[0]];
-            const color2 = coloresTipo[tipos[1]];
-
-            if (color1 && color2) {
-              card.style.background = `linear-gradient(to right, ${color1} 50%, ${color2} 50%)`;
-            }
-          } else {
-            const color = coloresTipo[tipos[0]];
-            if (color) {
-              card.style.backgroundColor = color;
-            }
-          }
+        const datos = generaciones[gen];
+        if (!datos) {
+          contador.textContent = "No hay datos para esta generación";
+          pokedex.classList.remove("pokedex-salida");
+          animandoGeneracion = false;
+          return;
         }
 
-        card.innerHTML = `
-          <img src="imagenes/${numero}.png" alt="${nombre}">
-          <h2>${nombre}</h2>
-          <p>#${numero}</p>
-        `;
-    //(click seguro)
-    card.addEventListener("click", () => {
-      abrirModal(nombre, numero);
-    });
+        datos.nombres.forEach((nombre, index) => {
+          const numero = (index + datos.inicio).toString().padStart(3, "0");
+          const card = document.createElement("article");
+          card.className = "pokemon";
+          card.dataset.numero = numero;
+          card.style.animationDelay = `${index * 0.018}s`;
 
-    pokedex.appendChild(card);
+          const info = infoPokemon[numero];
 
-      });
-      
-      document.querySelectorAll(".menu button")
-        .forEach(btn => btn.classList.remove("activo"));
+          if (info) {
+            const tipos = info.tipo.split(" / ");
 
-      if (event) {
-        event.target.classList.add("activo");
-      }
-      filtrar();
+            if (tipos.length === 2) {
+              const color1 = coloresTipo[tipos[0]];
+              const color2 = coloresTipo[tipos[1]];
+
+              if (color1 && color2) {
+                card.style.background = `linear-gradient(to right, ${color1} 50%, ${color2} 50%)`;
+              }
+            } else {
+              const color = coloresTipo[tipos[0]];
+              if (color) {
+                card.style.backgroundColor = color;
+              }
+            }
+          }
+
+          card.innerHTML = `
+            <img src="imagenes/${numero}.png" alt="${nombre}">
+            <h2>${nombre}</h2>
+            <p>#${numero}</p>
+          `;
+
+          card.addEventListener("click", () => {
+            abrirModal(nombre, numero);
+          });
+
+          pokedex.appendChild(card);
+        });
+
+        document.querySelectorAll(".menu button").forEach(btn => btn.classList.remove("activo"));
+
+        if (event) {
+          event.target.classList.add("activo");
+        } else {
+          const botonInicial = document.querySelector(`.menu button:nth-child(${gen})`);
+          document.querySelector(".menu button")?.classList.add("activo");
+        }
+
+        buscador.value = "";
+        filtrar();
+
+        pokedex.classList.remove("pokedex-salida");
+        pokedex.classList.add("pokedex-entrada");
+
+        setTimeout(() => {
+          pokedex.classList.remove("pokedex-entrada");
+          animandoGeneracion = false;
+        }, 650);
+      }, 280);
     }
+
     function filtrar() {
       const texto = buscador.value.toLowerCase().trim();
       const tipoActivo = document.querySelector(".tipo-box.activo")?.dataset.tipo;
@@ -667,11 +694,7 @@
           tipoActivo === "todos" ||
           (info && info.tipo.includes(tipoActivo));
 
-        if (coincideBusqueda && coincideTipo) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
-        }
+        card.style.display = coincideBusqueda && coincideTipo ? "block" : "none";
       });
 
       actualizarContador();
@@ -682,9 +705,7 @@
       let visibles = 0;
 
       cards.forEach(card => {
-        if (card.style.display !== "none") {
-          visibles++;
-        }
+        if (card.style.display !== "none") visibles++;
       });
 
       const tipoActivo = document.querySelector(".tipo-box.activo")?.dataset.tipo;
@@ -692,25 +713,17 @@
 
       let mensaje = `Mostrando ${visibles} de ${cards.length} Pokémon`;
 
-      if (tipoActivo && tipoActivo !== "todos") {
-        mensaje += ` tipo ${tipoActivo}`;
-      }
-
-      if (textoBusqueda !== "") {
-        mensaje += ` con "${textoBusqueda}"`;
-      }
+      if (tipoActivo && tipoActivo !== "todos") mensaje += ` tipo ${tipoActivo}`;
+      if (textoBusqueda !== "") mensaje += ` con "${textoBusqueda}"`;
 
       contador.textContent = mensaje;
     }
 
-
-    // ✅ Cargar Gen 1 al iniciar
-    cargarGeneracion(1);
-    document.querySelector(".menu button").classList.add("activo");
-    document.getElementById("buscador").value = "";
-    
     function abrirModal(nombre, numero) {
-      document.getElementById("modal").style.display = "flex";
+      const modal = document.getElementById("modal");
+      const modalContent = document.querySelector(".modal-content");
+
+      modal.style.display = "flex";
 
       document.getElementById("modal-img").src = `imagenes/${numero}.png`;
       document.getElementById("modal-nombre").textContent = nombre;
@@ -723,35 +736,58 @@
 
       document.getElementById("modal-desc").textContent =
         info ? info.descripcion : "Sin descripción disponible";
+
+      // Cambiar el fondo del modal según el tipo del Pokémon
+      if (info) {
+        const tipos = info.tipo.split(" / ");
+
+        if (tipos.length === 2) {
+          const color1 = coloresTipo[tipos[0]];
+          const color2 = coloresTipo[tipos[1]];
+
+          if (color1 && color2) {
+            modalContent.style.background = `linear-gradient(to right, ${color1} 50%, ${color2} 50%)`;
+          }
+        } else {
+          const color = coloresTipo[tipos[0]];
+
+          if (color) {
+            modalContent.style.background = color;
+          }
+        }
+
+        // Si el tipo es Siniestro, ponemos el texto en blanco para que se lea bien
+        if (info.tipo.includes("Siniestro")) {
+          modalContent.style.color = "white";
+        } else {
+          modalContent.style.color = "black";
+        }
+      } else {
+        modalContent.style.background = "white";
+        modalContent.style.color = "black";
+      }
     }
 
     function cerrarModal() {
       document.getElementById("modal").style.display = "none";
     }
-    
-    document.getElementById("modal").addEventListener("click", function(e) {
-      if (e.target.id === "modal") {
-        cerrarModal();
-      }
-    });
 
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target.id === "modal") cerrarModal();
+    });
 
     document.querySelectorAll(".tipo-box").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tipo-box")
-          .forEach(b => b.classList.remove("activo"));
-
+        document.querySelectorAll(".tipo-box").forEach(b => b.classList.remove("activo"));
         btn.classList.add("activo");
-
         filtrar();
       });
     });
 
-    buscador.addEventListener("input", () => {
-      filtrar();
-    });
+    buscador.addEventListener("input", () => filtrar());
 
+    cargarGeneracion(1);
+    document.querySelector(".menu button").classList.add("activo");
   </script>
-
 </body>
 </html>
