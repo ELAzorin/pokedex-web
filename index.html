@@ -37,6 +37,14 @@
     </nav>
   </header>
 
+  <div class="buscador-container">
+    <input 
+      type="text" 
+      id="buscador" 
+      placeholder="Buscar por nombre o número..."
+    >
+  </div>
+  <p id="contador">Mostrando 0 Pokémon</p>
   <div class="leyenda">
     <button class="tipo-box reset" data-tipo="todos">Todos</button>
     <button class="tipo-box" data-tipo="Fuego">Fuego</button>
@@ -56,6 +64,7 @@
     <button class="tipo-box" data-tipo="Dragón">Dragón</button>
     <button class="tipo-box" data-tipo="Fantasma">Fantasma</button>
     <button class="tipo-box" data-tipo="Acero">Acero</button>
+    <button class="tipo-box" data-tipo="Siniestro">Siniestro</button>
   </div>
 
   <!-- CONTENIDO -->
@@ -72,6 +81,9 @@
   <!-- SCRIPT -->
   <script>
     const pokedex = document.getElementById("pokedex");
+    const buscador = document.getElementById("buscador");
+    const contador = document.getElementById("contador");
+
 
     const generaciones = {
 
@@ -579,18 +591,20 @@
       "Hielo": "#caf0f8",
       "Dragón": "#a0c4ff",
       "Fantasma": "#bdb2ff",
-      "Acero": "#d9d9d9"
+      "Acero": "#d9d9d9",
+      "Siniestro": "#686666"
     };
 
     function cargarGeneracion(gen, event) {
       pokedex.innerHTML = "";
-
+      document.querySelector('[data-tipo="todos"]').classList.add("activo");
       const datos = generaciones[gen];
 
       datos.nombres.forEach((nombre, index) => {
         const numero = (index + datos.inicio).toString().padStart(3, "0");
         const card = document.createElement("article");
         card.className = "pokemon";
+        card.dataset.numero = numero;
 
         const info = infoPokemon[numero];
 
@@ -617,7 +631,6 @@
           <h2>${nombre}</h2>
           <p>#${numero}</p>
         `;
-
     //(click seguro)
     card.addEventListener("click", () => {
       abrirModal(nombre, numero);
@@ -633,11 +646,68 @@
       if (event) {
         event.target.classList.add("activo");
       }
+      filtrar();
     }
+    function filtrar() {
+      const texto = buscador.value.toLowerCase().trim();
+      const tipoActivo = document.querySelector(".tipo-box.activo")?.dataset.tipo;
+
+      document.querySelectorAll(".pokemon").forEach(card => {
+        const nombre = card.querySelector("h2").textContent.toLowerCase();
+        const numero = card.dataset.numero;
+        const info = infoPokemon[numero];
+
+        const coincideBusqueda =
+          nombre.includes(texto) ||
+          numero.includes(texto) ||
+          ("#" + numero).includes(texto);
+
+        const coincideTipo =
+          !tipoActivo ||
+          tipoActivo === "todos" ||
+          (info && info.tipo.includes(tipoActivo));
+
+        if (coincideBusqueda && coincideTipo) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      actualizarContador();
+    }
+
+    function actualizarContador() {
+      const cards = document.querySelectorAll(".pokemon");
+      let visibles = 0;
+
+      cards.forEach(card => {
+        if (card.style.display !== "none") {
+          visibles++;
+        }
+      });
+
+      const tipoActivo = document.querySelector(".tipo-box.activo")?.dataset.tipo;
+      const textoBusqueda = buscador.value.trim();
+
+      let mensaje = `Mostrando ${visibles} de ${cards.length} Pokémon`;
+
+      if (tipoActivo && tipoActivo !== "todos") {
+        mensaje += ` tipo ${tipoActivo}`;
+      }
+
+      if (textoBusqueda !== "") {
+        mensaje += ` con "${textoBusqueda}"`;
+      }
+
+      contador.textContent = mensaje;
+    }
+
 
     // ✅ Cargar Gen 1 al iniciar
     cargarGeneracion(1);
     document.querySelector(".menu button").classList.add("activo");
+    document.getElementById("buscador").value = "";
     
     function abrirModal(nombre, numero) {
       document.getElementById("modal").style.display = "flex";
@@ -665,33 +735,22 @@
       }
     });
 
+
     document.querySelectorAll(".tipo-box").forEach(btn => {
       btn.addEventListener("click", () => {
-        const tipoSeleccionado = btn.dataset.tipo;
-
-        // activar botón
         document.querySelectorAll(".tipo-box")
           .forEach(b => b.classList.remove("activo"));
 
         btn.classList.add("activo");
 
-        document.querySelectorAll(".pokemon").forEach(card => {
-          const numero = card.querySelector("p").textContent.replace("#", "");
-          const info = infoPokemon[numero];
-
-          if (tipoSeleccionado === "todos") {
-            card.style.display = "block";
-            return;
-          }
-
-          if (info && info.tipo.includes(tipoSeleccionado)) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
+        filtrar();
       });
     });
+
+    buscador.addEventListener("input", () => {
+      filtrar();
+    });
+
   </script>
 
 </body>
