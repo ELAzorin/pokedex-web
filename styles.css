@@ -85,6 +85,32 @@ h1 {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
+.boton-random {
+  min-width: 170px;
+  padding: 10px 22px;
+  border: 3px solid #1e90ff;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+
+  background: #e3350d;
+  color: white;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.boton-random:hover {
+  background: #b82a0a;
+  transform: scale(1.07);
+  box-shadow: 0 8px 18px rgba(30, 144, 255, 0.45);
+}
+
+.boton-random:active {
+  transform: scale(0.95);
+}
+
+
 /* BOTÓN MOSTRAR TODOS */
 
 .boton-todos {
@@ -537,6 +563,12 @@ button:hover {
 button.boton-todos,
 button.boton-todos.activo {
   color: white !important;
+}
+
+.boton-random,
+.boton-random:hover,
+.boton-random:active {
+  color: white;
 }
 
 @media (max-width: 768px) {
