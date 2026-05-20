@@ -40,7 +40,14 @@
 
   <div class="contador-container">
     <p id="contador">Mostrando 0 Pokémon</p>
-    <button class="tipo-box reset boton-todos activo" data-tipo="todos">Mostrar todos</button>
+
+    <button class="tipo-box reset boton-todos" data-tipo="todos">
+      Mostrar todos
+    </button>
+
+    <button id="btn-random" class="boton-random">
+      Pokémon aleatorio
+    </button>
   </div>
 
   <div class="leyenda">
@@ -784,7 +791,44 @@
       });
     });
 
-    buscador.addEventListener("input", () => filtrar());
+    function pokemonAleatorio() {
+      const cardsVisibles = Array.from(document.querySelectorAll(".pokemon"))
+        .filter(card => card.style.display !== "none");
+
+      if (cardsVisibles.length === 0) {
+        contador.textContent = "No hay Pokémon visibles para elegir";
+        return;
+      }
+
+      const indiceAleatorio = Math.floor(Math.random() * cardsVisibles.length);
+      const cardElegida = cardsVisibles[indiceAleatorio];
+
+      const nombre = cardElegida.querySelector("h2").textContent;
+      const numero = cardElegida.dataset.numero;
+
+      cardElegida.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+      cardElegida.classList.add("pokemon-elegido");
+
+      setTimeout(() => {
+        abrirModal(nombre, numero);
+      }, 500);
+
+      setTimeout(() => {
+        cardElegida.classList.remove("pokemon-elegido");
+      }, 1500);
+    }
+
+    buscador.addEventListener("input", () => {
+      filtrar();
+    });
+
+    document.getElementById("btn-random").addEventListener("click", () => {
+      pokemonAleatorio();
+    });
 
     cargarGeneracion(1);
     document.querySelector(".menu button").classList.add("activo");
