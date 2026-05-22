@@ -7,18 +7,27 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
   <!-- MODAL -->
   <div id="modal" class="modal">
     <div class="modal-content">
-      <span class="cerrar" onclick="cerrarModal()">&times;</span>
-      <img id="modal-img" alt="Imagen del Pokémon">
+
+      <span class="cerrar">✖</span>
+
+      <!-- 🔥 Flecha izquierda -->
+      <button id="prev-pokemon" class="flecha flecha-izq">⟨</button>
+
+      <!-- 🔥 Flecha derecha -->
+      <button id="next-pokemon" class="flecha flecha-der">⟩</button>
+
+      <img id="modal-img">
       <h2 id="modal-nombre"></h2>
       <p id="modal-numero"></p>
       <p id="modal-tipo"></p>
       <p id="modal-desc"></p>
+
     </div>
   </div>
+
 
   <!-- HEADER -->
   <header>
@@ -35,6 +44,7 @@
         <li><button onclick="cargarGeneracion(6, event)">Gen 6</button></li>
         <li><button onclick="cargarGeneracion(7, event)">Gen 7</button></li>
         <li><button onclick="cargarGeneracion(8, event)">Gen 8</button></li>
+        <li><button onclick="cargarGeneracion(9, event)">Gen 9</button></li>
       </ul>
     </nav>
   </header>
@@ -89,6 +99,8 @@
 
   <!-- SCRIPT -->
   <script>
+    let listaActual = [];
+    let indiceActual = 0;
     const pokedex = document.getElementById("pokedex");
     const buscador = document.getElementById("buscador");
     const contador = document.getElementById("contador");
@@ -290,57 +302,63 @@
         ]
       },
 
-      // ✅ GEN 8 (810–898)
+      // ✅ GEN 8 (810–905)
       8: {
         inicio: 810,
         nombres: [
-          "Grookey","Thwackey","Rillaboom",
-          "Scorbunny","Raboot","Cinderace",
-          "Sobble","Drizzile","Inteleon",
-          "Skwovet","Greedent",
-          "Rookidee","Corvisquire","Corviknight",
-          "Blipbug","Dottler","Orbeetle",
-          "Nickit","Thievul",
-          "Gossifleur","Eldegoss",
-          "Wooloo","Dubwool",
-          "Chewtle","Drednaw",
-          "Yamper","Boltund",
-          "Rolycoly","Carkol","Coalossal",
-          "Applin","Flapple","Appletun",
-          "Silicobra","Sandaconda",
-          "Cramorant",
-          "Arrokuda","Barraskewda",
-          "Toxel","Toxtricity",
-          "Sizzlipede","Centiskorch",
-          "Clobbopus","Grapploct",
-          "Sinistea","Polteageist",
-          "Hatenna","Hattrem","Hatterene",
-          "Impidimp","Morgrem","Grimmsnarl",
-          "Obstagoon",
-          "Perrserker",
-          "Cursola",
-          "Sirfetch’d",
-          "Mr. Rime",
-          "Runerigus",
-          "Milcery","Alcremie",
-          "Falinks",
-          "Pincurchin",
-          "Snom","Frosmoth",
-          "Stonjourner",
-          "Eiscue",
-          "Indeedee",
-          "Morpeko",
-          "Cufant","Copperajah",
-          "Dracozolt","Arctozolt","Dracovish","Arctovish",
-          "Duraludon",
-          "Dreepy","Drakloak","Dragapult",
-          "Zacian","Zamazenta","Eternatus",
-          "Kubfu","Urshifu",
-          "Zarude",
-          "Regieleki","Regidrago",
+          "Grookey","Thwackey","Rillaboom","Scorbunny","Raboot","Cinderace",
+          "Sobble","Drizzile","Inteleon","Skwovet","Greedent",
+          "Rookidee","Corvisquire","Corviknight","Blipbug","Dottler","Orbeetle",
+          "Nickit","Thievul","Gossifleur","Eldegoss","Wooloo","Dubwool",
+          "Chewtle","Drednaw","Yamper","Boltund",
+          "Rolycoly","Carkol","Coalossal","Applin","Flapple","Appletun",
+          "Silicobra","Sandaconda","Cramorant","Arrokuda","Barraskewda",
+          "Toxel","Toxtricity","Sizzlipede","Centiskorch","Clobbopus","Grapploct",
+          "Sinistea","Polteageist","Hatenna","Hattrem","Hatterene",
+          "Impidimp","Morgrem","Grimmsnarl","Obstagoon","Perrserker",
+          "Cursola","Sirfetch’d","Mr. Rime","Runerigus",
+          "Milcery","Alcremie","Falinks","Pincurchin","Snom","Frosmoth","Stonjourner",
+          "Eiscue","Indeedee","Morpeko","Cufant","Copperajah","Dracozolt","Arctozolt","Dracovish","Arctovish",
+          "Duraludon","Dreepy","Drakloak","Dragapult","Zacian","Zamazenta","Eternatus",
+          "Kubfu","Urshifu","Zarude","Regieleki","Regidrago",
           "Glastrier","Spectrier","Calyrex","Wyrdeer","Kleavor","Ursaluna","Basculegion",
           "Sneasler","Overqwil","Enamorus"
+        ]
+      },
 
+      // ✅ GEN 9 (906–1010)
+      9: {
+        inicio: 906,
+        nombres: [
+          "Sprigatito","Floragato","Meowscarada","Fuecoco","Crocalor","Skeledirge",
+          "Quaxly","Quaxwell","Quaquaval","Lechonk","Oinkologne",
+          "Tarountula","Spidops","Nymble","Lokix",
+          "Pawmi","Pawmo","Pawmot","Tandemaus","Maushold","Fidough","Dachsbun",
+          "Smoliv","Dolliv","Arboliva","Squawkabilly",
+          "Nacli","Naclstack","Garganacl","Charcadet","Armarouge","Ceruledge",
+          "Tadbulb","Bellibolt","Wattrel","Kilowattrel","Maschiff","Mabosstiff",
+          "Shroodle","Grafaiai","Bramblin","Brambleghast","Toedscool","Toedscruel",
+          "Klawf","Capsakid","Scovillain","Rellor","Rabsca",
+          "Flittle","Espathra","Tinkatink","Tinkatuff","Tinkaton",
+          "Wiglett","Wugtrio","Bombirdier","Finizen","Palafin","Varoom","Revavroom",
+          "Cyclizar","Orthworm","Glimmet","Glimmora",
+          "Greavard","Houndstone","Flamigo","Cetoddle","Cetitan",
+          "Veluza","Dondozo","Tatsugiri","Annihilape",
+          "Clodsire","Farigiraf","Dudunsparce","Kingambit",
+          "Great Tusk","Scream Tail","Brute Bonnet","Flutter Mane","Slither Wing","Sandy Shocks",
+          "Iron Treads","Iron Bundle","Iron Hands","Iron Jugulis","Iron Moth","Iron Thorns",
+          "Frigibax","Arctibax","Baxcalibur",
+          "Gimmighoul","Gholdengo",
+          "Wo-Chien","Chien-Pao","Ting-Lu","Chi-Yu",
+          "Roaring Moon","Iron Valiant",
+          "Koraidon","Miraidon",
+          "Walking Wake","Iron Leaves",
+          "Dipplin","Poltchageist","Sinistcha",
+          "Okidogi","Munkidori","Fezandipiti","Ogerpon",
+          "Archaludon","Hydrapple",
+          "Gouging Fire","Raging Bolt",
+          "Iron Boulder","Iron Crown",
+          "Terapagos","Pechaunt"
         ]
       },
 
@@ -1272,8 +1290,131 @@
       "902": { tipo: "Agua / Fantasma", descripcion: "Espíritus nadan en su interior." },
       "903": { tipo: "Lucha / Veneno", descripcion: "Ágil y extremadamente venenoso." },
       "904": { tipo: "Siniestro / Veneno", descripcion: "Produce toxinas letales." },
-      "905": { tipo: "Hada / Volador", descripcion: "Ser divino ligado al amor." }
+      "905": { tipo: "Hada / Volador", descripcion: "Ser divino ligado al amor." },
       // FIN OCTAVA GENERACIÓN
+
+      // INICIO NOVENA GENERACIÓN
+      "906": { tipo: "Planta", descripcion: "Curioso y juguetón." },
+      "907": { tipo: "Planta", descripcion: "Más ágil." },
+      "908": { tipo: "Planta / Siniestro", descripcion: "Sigiloso y elegante." },
+      "909": { tipo: "Fuego", descripcion: "Relajado y glotón." },
+      "910": { tipo: "Fuego", descripcion: "Más fuerte." },
+      "911": { tipo: "Fuego / Fantasma", descripcion: "Voz poderosa." },
+      "912": { tipo: "Agua", descripcion: "Limpio y orgulloso." },
+      "913": { tipo: "Agua", descripcion: "Entrenado." },
+      "914": { tipo: "Agua / Lucha", descripcion: "Danza de combate." },
+      "915": { tipo: "Normal", descripcion: "Pequeño y tranquilo." },
+      "916": { tipo: "Normal", descripcion: "Más fuerte." },
+      "917": { tipo: "Bicho", descripcion: "Teje redes." },
+      "918": { tipo: "Bicho", descripcion: "Trampa eficaz." },
+      "919": { tipo: "Bicho", descripcion: "Muy veloz." },
+      "920": { tipo: "Bicho / Siniestro", descripcion: "Gran atacante." },
+      "921": { tipo: "Eléctrico", descripcion: "Carga energía." },
+      "922": { tipo: "Eléctrico / Lucha", descripcion: "Más activo." },
+      "923": { tipo: "Eléctrico / Lucha", descripcion: "Gran golpe." },
+      "924": { tipo: "Normal", descripcion: "En grupo." },
+      "925": { tipo: "Normal", descripcion: "Familia unida." },
+      "926": { tipo: "Hada", descripcion: "Aroma dulce." },
+      "927": { tipo: "Hada", descripcion: "Protector." },
+      "928": { tipo: "Planta / Normal", descripcion: "Produce aceite." },
+      "929": { tipo: "Planta / Normal", descripcion: "Más fuerte." },
+      "930": { tipo: "Planta / Normal", descripcion: "Gran cosecha." },
+      "931": { tipo: "Normal / Volador", descripcion: "Colores variados." },
+      "932": { tipo: "Roca", descripcion: "Cristal sólido." },
+      "933": { tipo: "Roca", descripcion: "Más grande." },
+      "934": { tipo: "Roca", descripcion: "Muy resistente." },
+      "935": { tipo: "Fuego", descripcion: "Pequeño guerrero." },
+      "936": { tipo: "Fuego / Psíquico", descripcion: "Con armadura." },
+      "937": { tipo: "Fuego / Fantasma", descripcion: "Espada oscura." },
+      "938": { tipo: "Eléctrico", descripcion: "Energía flotante." },
+      "939": { tipo: "Eléctrico", descripcion: "Gran descarga." },
+      "940": { tipo: "Eléctrico / Volador", descripcion: "Sobrevuela mares." },
+      "941": { tipo: "Eléctrico / Volador", descripcion: "Alta velocidad." },
+      "942": { tipo: "Siniestro", descripcion: "Protector feroz." },
+      "943": { tipo: "Siniestro", descripcion: "Líder fuerte." },
+      "944": { tipo: "Veneno / Normal", descripcion: "Artista callejero." },
+      "945": { tipo: "Veneno / Normal", descripcion: "Creativo." },
+      "946": { tipo: "Planta / Fantasma", descripcion: "Esporas leves." },
+      "947": { tipo: "Planta / Fantasma", descripcion: "Brilla en la noche." },
+      "948": { tipo: "Tierra / Planta", descripcion: "Imita medusas." },
+      "949": { tipo: "Tierra / Planta", descripcion: "Más fuerte." },
+      "950": { tipo: "Roca", descripcion: "Gran resistencia." },
+      "951": { tipo: "Planta", descripcion: "Pequeño picante." },
+      "952": { tipo: "Planta / Fuego", descripcion: "Muy intenso." },
+      "953": { tipo: "Bicho", descripcion: "Bola rodante." },
+      "954": { tipo: "Bicho / Psíquico", descripcion: "Mente fuerte." },
+      "955": { tipo: "Psíquico", descripcion: "Muy distraído." },
+      "956": { tipo: "Psíquico", descripcion: "Observador." },
+      "957": { tipo: "Hada / Acero", descripcion: "Pequeña forjadora." },
+      "958": { tipo: "Hada / Acero", descripcion: "Más fuerte." },
+      "959": { tipo: "Hada / Acero", descripcion: "Gran martillo." },
+      "960": { tipo: "Agua", descripcion: "Oculto en arena." },
+      "961": { tipo: "Agua", descripcion: "Más grande." },
+      "962": { tipo: "Volador / Siniestro", descripcion: "Transporta objetos." },
+      "963": { tipo: "Agua", descripcion: "Enérgico." },
+      "964": { tipo: "Agua", descripcion: "Forma de héroe." },
+      "965": { tipo: "Acero / Veneno", descripcion: "Motor vivo." },
+      "966": { tipo: "Acero / Veneno", descripcion: "Gran velocidad." },
+      "967": { tipo: "Dragón / Normal", descripcion: "Rápido." },
+      "968": { tipo: "Acero", descripcion: "Se entierra." },
+      "969": { tipo: "Roca / Veneno", descripcion: "Cristal brillante." },
+      "970": { tipo: "Roca / Veneno", descripcion: "Poderoso." },
+      "971": { tipo: "Fantasma", descripcion: "Fiel incluso muerto." },
+      "972": { tipo: "Fantasma", descripcion: "Gran guardián." },
+      "973": { tipo: "Volador / Lucha", descripcion: "Similar a un flamenco." },
+      "974": { tipo: "Hielo", descripcion: "Muy frío." },
+      "975": { tipo: "Hielo", descripcion: "Gran masa." },
+      "976": { tipo: "Agua / Psíquico", descripcion: "Muy veloz." },
+      "977": { tipo: "Agua", descripcion: "Gigante." },
+      "978": { tipo: "Dragón / Agua", descripcion: "Comunica estados." },
+      "979": { tipo: "Lucha / Fantasma", descripcion: "Espíritu furioso." },
+      "980": { tipo: "Veneno / Tierra", descripcion: "Muy resistente." },
+      "981": { tipo: "Psíquico / Normal", descripcion: "Evolución curiosa." },
+      "982": { tipo: "Normal", descripcion: "Más segmentos." },
+      "983": { tipo: "Siniestro / Acero", descripcion: "Rey duro." },
+      "984": { tipo: "Tierra / Lucha", descripcion: "Forma antigua." },
+      "985": { tipo: "Hada / Psíquico", descripcion: "Forma antigua." },
+      "986": { tipo: "Planta / Siniestro", descripcion: "Forma antigua." },
+      "987": { tipo: "Fantasma / Hada", descripcion: "Forma antigua." },
+      "988": { tipo: "Bicho / Lucha", descripcion: "Forma antigua." },
+      "989": { tipo: "Eléctrico / Tierra", descripcion: "Forma antigua." },
+      "990": { tipo: "Tierra / Acero", descripcion: "Futuro." },
+      "991": { tipo: "Hielo / Agua", descripcion: "Futuro." },
+      "992": { tipo: "Lucha / Eléctrico", descripcion: "Futuro." },
+      "993": { tipo: "Siniestro / Volador", descripcion: "Futuro." },
+      "994": { tipo: "Fuego / Veneno", descripcion: "Futuro." },
+      "995": { tipo: "Roca / Eléctrico", descripcion: "Futuro." },
+      "996": { tipo: "Dragón / Hielo", descripcion: "Muy fuerte." },
+      "997": { tipo: "Dragón / Hielo", descripcion: "Más poderoso." },
+      "998": { tipo: "Dragón / Hielo", descripcion: "Dominante." },
+      "999": { tipo: "Fantasma", descripcion: "Moneda viviente." },
+      "1000": { tipo: "Acero / Fantasma", descripcion: "Tesoro antiguo." },
+      "1001": { tipo: "Siniestro / Planta", descripcion: "Desastre." },
+      "1002": { tipo: "Siniestro / Hielo", descripcion: "Desastre." },
+      "1003": { tipo: "Siniestro / Tierra", descripcion: "Desastre." },
+      "1004": { tipo: "Siniestro / Fuego", descripcion: "Desastre." },
+      "1005": { tipo: "Dragón / Siniestro", descripcion: "Paradoja." },
+      "1006": { tipo: "Hada / Lucha", descripcion: "Paradoja." },
+      "1007": { tipo: "Lucha / Dragón", descripcion: "Legendario." },
+      "1008": { tipo: "Eléctrico / Dragón", descripcion: "Legendario." },
+      "1009": { tipo: "Agua / Dragón", descripcion: "Paradoja." },
+      "1010": { tipo: "Planta / Psíquico", descripcion: "Paradoja." },
+      "1011": { tipo: "Planta / Dragón", descripcion: "Evolución dulce." },
+      "1012": { tipo: "Fantasma", descripcion: "Espíritu té." },
+      "1013": { tipo: "Planta / Fantasma", descripcion: "Forma evolucionada." },
+      "1014": { tipo: "Veneno / Lucha", descripcion: "Guardián." },
+      "1015": { tipo: "Veneno / Psíquico", descripcion: "Astuto." },
+      "1016": { tipo: "Veneno / Hada", descripcion: "Elegante." },
+      "1017": { tipo: "Planta", descripcion: "Máscara mística." },
+      "1018": { tipo: "Acero / Dragón", descripcion: "Adaptación moderna." },
+      "1019": { tipo: "Planta / Dragón", descripcion: "Forma evolucionada." },
+      "1020": { tipo: "Fuego / Dragón", descripcion: "Paradoja antigua." },
+      "1021": { tipo: "Eléctrico / Dragón", descripcion: "Paradoja antigua." },
+      "1022": { tipo: "Roca / Psíquico", descripcion: "Futuro." },
+      "1023": { tipo: "Acero / Psíquico", descripcion: "Futuro." },
+      "1024": { tipo: "Normal", descripcion: "Forma astro." },
+      "1025": { tipo: "Veneno / Fantasma", descripcion: "Malicio oculto." }
+      // FIN NOVENA GENERACIÓN
     };
 
     const coloresTipo = {
@@ -1487,6 +1628,14 @@
     }
 
     function abrirModal(nombre, numero) {
+      
+      // Guardar los Pokémon visibles
+      listaActual = Array.from(document.querySelectorAll(".pokemon"))
+        .filter(card => card.style.display !== "none");
+
+      // Encontrar el índice actual
+      indiceActual = listaActual.findIndex(card => card.dataset.numero === numero);
+
       const modal = document.getElementById("modal");
       const modalContent = document.querySelector(".modal-content");
 
@@ -1582,12 +1731,58 @@
       }, 1500);
     }
 
+    function siguientePokemon() {
+      if (listaActual.length === 0) return;
+
+      indiceActual = (indiceActual + 1) % listaActual.length;
+
+      const card = listaActual[indiceActual];
+      const nombre = card.querySelector("h2").textContent;
+      const numero = card.dataset.numero;
+
+      abrirModal(nombre, numero);
+    }
+
+    function anteriorPokemon() {
+      if (listaActual.length === 0) return;
+
+      indiceActual = (indiceActual - 1 + listaActual.length) % listaActual.length;
+
+      const card = listaActual[indiceActual];
+      const nombre = card.querySelector("h2").textContent;
+      const numero = card.dataset.numero;
+
+      abrirModal(nombre, numero);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (document.getElementById("modal").style.display === "flex") {
+        if (e.key === "ArrowRight") siguientePokemon();
+        if (e.key === "ArrowLeft") anteriorPokemon();
+      }
+    });
+
+    document.getElementById("next-pokemon").addEventListener("click", (e) => {
+      e.stopPropagation(); // 🔥 IMPORTANTE (evita cerrar el modal)
+      siguientePokemon();
+    });
+
+    document.getElementById("prev-pokemon").addEventListener("click", (e) => {
+      e.stopPropagation(); // 🔥 IMPORTANTE
+      anteriorPokemon();
+    });
+
     buscador.addEventListener("input", () => {
       filtrar();
     });
 
     document.getElementById("btn-random").addEventListener("click", () => {
       pokemonAleatorio();
+    });
+
+    document.querySelector(".cerrar").addEventListener("click", (e) => {
+      e.stopPropagation(); // 🔥 MUY IMPORTANTE
+      cerrarModal();
     });
 
     cargarGeneracion(1);
