@@ -470,6 +470,40 @@ nav {
   font-size: 14px;
 }
 
+/* Carta elegida por botón aleatorio */
+
+.pokemon-elegido {
+  animation: cartaElegida 1.2s ease !important;
+  z-index: 20;
+}
+
+@keyframes cartaElegida {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+
+  25% {
+    transform: scale(1.12) rotate(-2deg);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+  }
+
+  50% {
+    transform: scale(1.08) rotate(2deg);
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.9);
+  }
+
+  75% {
+    transform: scale(1.12) rotate(-1deg);
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.9);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
 /* =============================== */
 /* MODAL */
 /* =============================== */
@@ -524,7 +558,9 @@ nav {
   }
 }
 
-/* X cerrar */
+/* =============================== */
+/* X CERRAR */
+/* =============================== */
 
 .cerrar {
   position: absolute;
@@ -547,7 +583,9 @@ nav {
   color: red;
 }
 
-/* Imagen principal del modal */
+/* =============================== */
+/* IMAGEN PRINCIPAL DEL MODAL */
+/* =============================== */
 
 #modal-img {
   width: 260px;
@@ -595,13 +633,13 @@ nav {
 
   padding: 0;
 
-  background: gold !important;
-  color: black !important;
+  background: #111 !important;
+  color: gold !important;
 
-  border: none !important;
+  border: 2px solid gold !important;
   border-radius: 50% !important;
 
-  font-size: 20px;
+  font-size: 21px;
   font-weight: bold;
   line-height: 1;
 
@@ -613,40 +651,58 @@ nav {
 
   z-index: 90;
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.45),
+    0 0 8px rgba(255, 215, 0, 0.45);
 
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
     background 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    border 0.2s ease;
 }
 
 #btn-shiny:hover,
 .btn-shiny:hover {
   transform: scale(1.15) rotate(5deg);
-  box-shadow: 0 0 16px gold;
+  box-shadow:
+    0 0 8px gold,
+    0 0 16px rgba(255, 215, 0, 0.85);
 }
 
 #btn-shiny.activo,
 .btn-shiny.activo {
-  background: black !important;
-  color: gold !important;
-  box-shadow: 0 0 15px gold;
+  background: linear-gradient(180deg, #000, #222) !important;
+  color: #fff7a8 !important;
+  border: 2px solid #fff7a8 !important;
+
+  box-shadow:
+    0 0 8px gold,
+    0 0 18px rgba(255, 215, 0, 0.9),
+    inset 0 0 8px rgba(255, 255, 255, 0.18);
+
   animation: brilloShiny 1s infinite alternate;
 }
 
 @keyframes brilloShiny {
   from {
-    box-shadow: 0 0 5px gold;
+    box-shadow:
+      0 0 6px rgba(255, 215, 0, 0.55),
+      0 0 12px rgba(255, 215, 0, 0.45);
   }
 
   to {
-    box-shadow: 0 0 18px gold;
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.95),
+      0 0 22px rgba(255, 215, 0, 0.85),
+      inset 0 0 8px rgba(255, 255, 255, 0.2);
   }
 }
 
-/* Flechas modal */
+/* =============================== */
+/* FLECHAS MODAL */
+/* =============================== */
 
 .flecha {
   position: absolute;
@@ -853,7 +909,7 @@ nav {
     min-width: 40px;
     min-height: 40px;
 
-    font-size: 18px;
+    font-size: 19px;
 
     z-index: 100;
   }
