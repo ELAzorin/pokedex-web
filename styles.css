@@ -585,7 +585,7 @@ button.boton-todos.activo {
 
 @media (max-width: 768px) {
   .menu {
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 
@@ -620,7 +620,6 @@ button.boton-todos.activo {
 .menu {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
 
   gap: 10px;
 
