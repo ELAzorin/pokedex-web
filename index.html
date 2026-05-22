@@ -13,10 +13,10 @@
 
       <span class="cerrar">✖</span>
 
-      <!-- 🔥 Flecha izquierda -->
+      <!-- Flecha izquierda -->
       <button id="prev-pokemon" class="flecha flecha-izq">⟨</button>
 
-      <!-- 🔥 Flecha derecha -->
+      <!-- Flecha derecha -->
       <button id="next-pokemon" class="flecha flecha-der">⟩</button>
 
       <img id="modal-img">
@@ -1763,12 +1763,12 @@
     });
 
     document.getElementById("next-pokemon").addEventListener("click", (e) => {
-      e.stopPropagation(); // 🔥 IMPORTANTE (evita cerrar el modal)
+      e.stopPropagation();
       siguientePokemon();
     });
 
     document.getElementById("prev-pokemon").addEventListener("click", (e) => {
-      e.stopPropagation(); // 🔥 IMPORTANTE
+      e.stopPropagation();
       anteriorPokemon();
     });
 
@@ -1781,7 +1781,7 @@
     });
 
     document.querySelector(".cerrar").addEventListener("click", (e) => {
-      e.stopPropagation(); // 🔥 MUY IMPORTANTE
+      e.stopPropagation();
       cerrarModal();
     });
 
