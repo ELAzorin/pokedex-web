@@ -618,8 +618,10 @@ button.boton-todos.activo {
 }
 
 .menu {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+
   gap: 10px;
 
   padding: 8px 12px;
